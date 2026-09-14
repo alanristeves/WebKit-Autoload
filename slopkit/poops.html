@@ -618,14 +618,21 @@ async function sendPayloadInPlace(name, tile) {
             flushMark("ELF-SOCKET-CLOSE-WARN", "name=" + clean(result.name)
                 + "-why=" + clean(result.closeWarning.message || result.closeWarning));
         ok = true;
-    } catch (error) {
-        if (tile) {
-            tile.className = payloadTileBaseClass(tile);
-            setPayloadTileState(tile, "failed");
-        }
-        flushMark("ELF-SEND-FAILED", "name=" + clean(name) + "-why="
-            + clean(error && error.message ? error.message : error));
-        ok = false;
+   } catch (error) {
+    if (tile) {
+        tile.className = payloadTileBaseClass(tile);
+        setPayloadTileState(tile, "failed");
+    }
+
+    const msg = clean(error && error.message ? error.message : error);
+
+    flushMark("ELF-SEND-FAILED",
+        "name=" + clean(name) + "-why=" + msg);
+
+    stageEl.textContent = "ProsperoMgr FAILED: " + msg;
+    stageEl.className = "bad";
+
+    ok = false;
     } finally {
         if (payloadSenderBlocked) {
             payloadSendBusy = true;
