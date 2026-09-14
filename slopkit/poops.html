@@ -33,11 +33,12 @@
   html, body {
     margin: 0;
     padding: 0;
-    /* Fundo escuro oficial do PS5 com um leve degradê */
-    background: radial-gradient(circle at center, #1f222d 0%, #0a0c10 100%);
-    color: #e3e6f0;
-    /* Fontes modernas e limpas que lembram o sistema do console */
-    font: 14px/1.45 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    /* Fundo preto puro com um brilho central cinza-azulado fosco (estilo terminal Kali) */
+    background: radial-gradient(circle at center, #11141a 0%, #050608 100%);
+    color: #a5b0c2;
+    /* Fontes monoespaçadas de alta tecnologia, perfeitas para telas de hacking */
+    font: 13px/1.5 "JetBrains Mono", "Fira Code", "Courier New", monospace;
+    letter-spacing: 0.5px;
     -webkit-font-smoothing: antialiased;
   }
   
@@ -47,41 +48,45 @@
     padding: 0 16px;
   }
   
-  /* O "Palco" agora parece um card da interface do PS5 */
+  /* O "Palco" agora parece um terminal de comando suspenso */
   #stage {
     margin: 12px 0;
-    padding: 16px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    color: #f5f7fa;
-    backdrop-filter: blur(8px);
-    transition: all 0.3s ease;
+    padding: 14px;
+    background: rgba(15, 19, 26, 0.75);
+    /* Borda sutil na cor cinza-chumbo do Kali */
+    border: 1px solid #2a313d;
+    border-radius: 4px;
+    color: #e1e7f0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    transition: all 0.25s ease;
   }
   
-  /* Modo OK: Luz Azul de quando o PS5 está ligado e funcionando */
+  /* Modo OK: O famoso Azul-Dragão brilhante do Kali Linux */
   #stage.ok {
-    border-color: #0072ce;
-    color: #00b2ff;
-    box-shadow: 0 0 15px rgba(0, 114, 206, 0.3);
+    border-color: #387eff;
+    color: #5ce1e6;
+    text-shadow: 0 0 8px rgba(92, 225, 230, 0.4);
+    box-shadow: inset 0 0 10px rgba(56, 126, 255, 0.15), 0 0 15px rgba(56, 126, 255, 0.2);
   }
   
-  /* Modo BAD: Luz Vermelha de erro ou alerta do console */
+  /* Modo BAD: Vermelho de alerta de intrusão / falha crítica */
   #stage.bad {
-    border-color: #f33;
-    color: #ff6677;
-    box-shadow: 0 0 15px rgba(255, 51, 51, 0.3);
+    border-color: #ff3b30;
+    color: #ff6b6b;
+    text-shadow: 0 0 8px rgba(255, 107, 107, 0.4);
+    box-shadow: inset 0 0 10px rgba(255, 59, 48, 0.15), 0 0 15px rgba(255, 59, 48, 0.2);
   }
   
   #liveStrip, #vitals, #cfg, #reboot, #verdict, #danger, #badge, #failureMessage {
     margin: 8px 0;
-    color: #a1a8b8;
+    color: #727e91;
   }
   
   #failureMessage {
     display: none;
-    color: #ff4d61;
-    font-weight: 600;
+    color: #ff4f4f;
+    font-weight: bold;
+    text-transform: uppercase;
   }
   
   #failureMessage.on {
@@ -94,20 +99,21 @@
   
   #badge.on {
     display: block;
-    color: #00b2ff;
-    font-weight: bold;
+    color: #5ce1e6;
   }
   
+  /* Bloco de tela de log ou código antigo */
   #scr, #early {
     white-space: pre-wrap;
     word-break: break-word;
-    font-size: 13px;
-    color: #8890a6;
+    font-size: 11px;
+    color: #6272a4; /* Tom clássico de comentários de código */
     max-height: 40vh;
     overflow: auto;
-    background: rgba(0, 0, 0, 0.2);
-    padding: 10px;
-    border-radius: 8px;
+    background: #090b0e;
+    padding: 12px;
+    border: 1px solid #1a1f26;
+    border-radius: 2px;
   }
   
   #payloadMenu {
@@ -121,28 +127,30 @@
   
   #payloadMenu .menuTitle {
     margin: 0 0 12px;
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
+    color: #e1e7f0;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
   
-  /* Blocos de opções parecendo os blocos de jogos do menu */
+  /* Linhas de payloads parecendo comandos executáveis de uma lista */
   #payloadMenu .payloadTile {
     display: block;
-    margin: 8px 0;
-    padding: 14px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    color: #ffffff;
+    margin: 6px 0;
+    padding: 12px;
+    background: #0d1117;
+    border: 1px solid #21262d;
+    border-radius: 4px;
+    color: #c9d1d9;
     text-decoration: none;
-    transition: transform 0.2s ease, background 0.2s ease;
+    transition: all 0.2s ease;
   }
   
+  /* Efeito de seleção de linha do terminal (Hover) */
   #payloadMenu .payloadTile:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateY(-2px);
+    background: #161b22;
+    border-color: #387eff;
+    color: #ffffff;
   }
   
   #payloadMenu .payloadTile.busy {
@@ -150,55 +158,59 @@
     pointer-events: none;
   }
   
-  /* Estados de envio dos blocos com as cores do PS5 */
+  /* Estados de Injeção de Scripts (Payloads) */
   #payloadMenu .payloadTile[data-state="sending"] {
-    border-color: #0072ce; /* Azul clássico Playstation */
-    background: rgba(0, 114, 206, 0.1);
+    border-color: #387eff;
+    background: rgba(56, 126, 255, 0.05);
   }
   
   #payloadMenu .payloadTile[data-state="sent"] {
-    border-color: #00b2ff; /* Azul claro brilhante */
-    color: #00b2ff;
+    border-color: #5ce1e6;
+    color: #5ce1e6;
   }
   
   #payloadMenu .payloadTile[data-state="failed"] {
-    border-color: #f33;
-    color: #ff6677;
+    border-color: #ff3b30;
+    color: #ff6b6b;
   }
   
   #payloadMenu .payloadTile img, .legacy, .stage-rail, #reactor, .field, .scan, .beam, .brand-row, #dt {
     display: none !important;
   }
   
+  /* Botão de re-injeção perigoso */
   #retryInject {
     display: none;
     margin: 12px 0;
-    padding: 12px 18px;
-    background: #2a1418;
-    color: #ff6677;
-    border: 1px solid #f33;
-    border-radius: 20px; /* Botão arredondado estilo console */
+    padding: 10px 16px;
+    background: rgba(255, 59, 48, 0.1);
+    color: #ff6b6b;
+    border: 1px solid #ff3b30;
+    border-radius: 4px;
     cursor: pointer;
+    text-transform: uppercase;
+    font-size: 12px;
   }
   
   #retryInject.on {
     display: inline-block;
   }
   
-  /* Botões de alternância arredondados e elegantes */
+  /* Botões de alternância secos e industriais */
   .drawer-toggle {
     margin: 8px 0;
-    padding: 8px 14px;
-    background: rgba(255, 255, 255, 0.08);
-    color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 20px;
+    padding: 6px 12px;
+    background: #161b22;
+    color: #a5b0c2;
+    border: 1px solid #30363d;
+    border-radius: 4px;
     cursor: pointer;
-    transition: background 0.2s;
+    font-size: 12px;
   }
   
   .drawer-toggle:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: #21262d;
+    color: #ffffff;
   }
   
   #deepDrawer {
@@ -212,38 +224,39 @@
   table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 13px;
+    font-size: 12px;
   }
   
   th, td {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 8px 10px;
+    border-bottom: 1px solid #161b22;
+    padding: 6px 8px;
     text-align: left;
   }
   
   th {
-    color: #ffffff;
-    font-weight: 600;
+    color: #5ce1e6; /* Cabeçalhos em azul tecnológico */
+    text-transform: uppercase;
+    font-size: 11px;
   }
   
   #arm {
     margin: 16px 0;
-    padding: 14px;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
+    padding: 12px;
+    background: #090b0e;
+    border: 1px solid #21262d;
+    border-radius: 4px;
   }
   
-  /* Links que lembram os botões de navegação da PSN */
+  /* Links que parecem conexões ssh ativas */
   #nav a {
     display: inline-block;
-    margin: 6px 12px 6px 0;
-    color: #00b2ff;
+    margin: 6px 16px 6px 0;
+    color: #387eff;
     text-decoration: none;
-    font-weight: 500;
   }
   
   #nav a:hover {
+    color: #5ce1e6;
     text-decoration: underline;
   }
 </style>
