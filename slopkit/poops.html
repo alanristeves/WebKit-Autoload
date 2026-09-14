@@ -30,252 +30,162 @@
 </script>
 <title>WebKit Autoloader</title>
 <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: radial-gradient(circle at center, #11141a 0%, #050608 100%);
-      color: #a5b0c2;
-      font: 13px/1.5 "JetBrains Mono", "Fira Code", "Courier New", monospace;
-      letter-spacing: 0.5px;
-      -webkit-font-smoothing: antialiased;
-    }
-    
-    #deck {
-      max-width: 720px;
-      margin: 20px auto;
-      padding: 0 16px;
-    }
-    
-    #stage {
-      margin: 12px 0;
-      padding: 16px;
-      background: rgba(15, 19, 26, 0.75);
-      border: 1px solid #2a313d;
-      border-radius: 4px;
-      color: #e1e7f0;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-      transition: all 0.25s ease;
-    }
-    
-    /* Modo OK: Azul-Dragão brilhante do Kali Linux */
-    #stage.ok {
-      border-color: #387eff;
-      color: #5ce1e6;
-      text-shadow: 0 0 8px rgba(92, 225, 230, 0.4);
-      box-shadow: inset 0 0 10px rgba(56, 126, 255, 0.15), 0 0 15px rgba(56, 126, 255, 0.2);
-    }
-    
-    /* Modo BAD: Alerta Vermelho de Falha */
-    #stage.bad {
-      border-color: #ff3b30;
-      color: #ff6b6b;
-      text-shadow: 0 0 8px rgba(255, 107, 107, 0.4);
-      box-shadow: inset 0 0 10px rgba(255, 59, 48, 0.15), 0 0 15px rgba(255, 59, 48, 0.2);
-    }
-    
-    #liveStrip, #vitals, #cfg, #reboot, #verdict, #danger, #badge, #failureMessage {
-      margin: 6px 0;
-      color: #727e91;
-    }
-    
-    #failureMessage {
-      display: none;
-      color: #ff4f4f;
-      font-weight: bold;
-      text-transform: uppercase;
-    }
-    
-    #failureMessage.on {
-      display: block;
-    }
-    
-    #badge {
-      display: none;
-    }
-    
-    #badge.on {
-      display: block;
-      color: #5ce1e6;
-      font-weight: bold;
-    }
-    
-    /* Container da Barra de Progresso */
-    #scr, #early {
-      display: block;
-      background: #090b0e;
-      border: 1px solid #1a1f26;
-      border-radius: 4px;
-      padding: 16px;
-      margin: 12px 0;
-    }
-
-    .progress-rail {
-      width: 100%;
-      height: 12px;
-      background: #11141a;
-      border: 1px solid #2a313d;
-      border-radius: 2px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .progress-bar {
-      width: 0%;
-      height: 100%;
-      background: linear-gradient(90deg, #387eff, #5ce1e6);
-      box-shadow: 0 0 10px rgba(92, 225, 230, 0.7);
-      transition: width 0.1s linear;
-    }
-
-    .progress-status {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 8px;
-      font-size: 11px;
-      color: #5ce1e6;
-      text-transform: uppercase;
-    }
-    
-    #payloadMenu {
-      display: none;
-      margin-top: 16px;
-    }
-    
-    #payloadMenu.on {
-      display: block;
-    }
-    
-    #payloadMenu .menuTitle {
-      margin: 0 0 12px;
-      color: #e1e7f0;
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    
-    #payloadMenu .payloadTile {
-      display: block;
-      margin: 6px 0;
-      padding: 12px;
-      background: #0d1117;
-      border: 1px solid #21262d;
-      border-radius: 4px;
-      color: #c9d1d9;
-      text-decoration: none;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    
-    #payloadMenu .payloadTile:hover {
-      background: #161b22;
-      border-color: #387eff;
-      color: #ffffff;
-    }
-    
-    #payloadMenu .payloadTile.busy {
-      opacity: .3;
-      pointer-events: none;
-    }
-    
-    #payloadMenu .payloadTile[data-state="sending"] {
-      border-color: #387eff;
-      background: rgba(56, 126, 255, 0.05);
-    }
-    
-    #payloadMenu .payloadTile[data-state="sent"] {
-      border-color: #5ce1e6;
-      color: #5ce1e6;
-    }
-    
-    #payloadMenu .payloadTile[data-state="failed"] {
-      border-color: #ff3b30;
-      color: #ff6b6b;
-    }
-    
-    #retryInject {
-      display: none;
-      margin: 12px 0;
-      padding: 10px 16px;
-      background: rgba(255, 59, 48, 0.1);
-      color: #ff6b6b;
-      border: 1px solid #ff3b30;
-      border-radius: 4px;
-      cursor: pointer;
-      text-transform: uppercase;
-      font-size: 11px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    
-    #retryInject.on {
-      display: inline-block;
-    }
-    
-    .drawer-toggle {
-      margin: 8px 0;
-      padding: 8px 14px;
-      background: #161b22;
-      color: #a5b0c2;
-      border: 1px solid #30363d;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 12px;
-      width: 100%;
-    }
-    
-    .drawer-toggle:hover {
-      background: #21262d;
-      color: #ffffff;
-    }
-    
-    #deepDrawer {
-      display: none;
-      margin-top: 12px;
-    }
-    
-    #deepDrawer.on {
-      display: block;
-    }
-    
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
-    }
-    
-    th, td {
-      border-bottom: 1px solid #161b22;
-      padding: 8px 6px;
-      text-align: left;
-    }
-    
-    th {
-      color: #5ce1e6;
-      text-transform: uppercase;
-      font-size: 11px;
-    }
-    
-    #arm {
-      margin: 16px 0;
-      padding: 12px;
-      background: #090b0e;
-      border: 1px solid #21262d;
-      border-radius: 4px;
-    }
-    
-    #nav a {
-      display: inline-block;
-      margin: 6px 16px 6px 0;
-      color: #387eff;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    
-    #nav a:hover {
-      color: #5ce1e6;
-      text-decoration: underline;
-    }
-  </style>
+  /* Base Ultra Minimalista */
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #050505; /* Preto quase puro, sem degradê */
+    color: #6a707c; /* Cinza sutil para textos secundários */
+    /* Fonte moderna, fina e espaçada */
+    font: 300 13px system-ui, -apple-system, sans-serif;
+    letter-spacing: 0.5px;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  #deck {
+    max-width: 480px; /* Mais compacto para concentrar as informações */
+    margin: 40px auto;
+    padding: 0 16px;
+  }
+  
+  /* Bloco de Status Principal */
+  #stage {
+    margin: 0 0 20px 0;
+    padding: 0 0 16px 0;
+    border: none;
+    border-bottom: 1px solid #16161a; /* Linha divisória fina */
+    color: #a0a5b0; /* Texto principal do status */
+    transition: color 0.3s ease;
+  }
+  
+  /* Estados de Sucesso e Erro sutilmente coloridos apenas no texto */
+  #stage.ok { color: #00b2ff; }
+  #stage.bad { color: #ff3b30; }
+  
+  /* Linhas de informações limpas e sem poluição */
+  #liveStrip, #vitals, #cfg, #reboot, #verdict, #danger, #badge, #failureMessage {
+    margin: 4px 0;
+    color: inherit; /* Segue a cor do status pai */
+    font-size: 12px;
+  }
+  
+  #failureMessage { display: none; font-weight: 400; text-transform: uppercase; letter-spacing: 1px; }
+  #failureMessage.on { display: block; }
+  
+  #badge { display: none; text-transform: uppercase; letter-spacing: 1px; }
+  #badge.on { display: block; }
+  
+  /* TRANSFORMAÇÃO: Tela de códigos virou uma Linha Fina de Carregamento */
+  #scr, #early {
+    display: block;
+    width: 100%;
+    height: 3px; /* Linha de progresso ultra fina */
+    background: #16161a; /* Cor do trilho de fundo */
+    position: relative;
+    overflow: hidden;
+    margin: 24px 0;
+    padding: 0;
+    border: none;
+  }
+  
+  /* Efeito visual da porcentagem preenchendo a linha fina */
+  #scr::after, #early::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 35%; /* O JavaScript altera isso de 0% a 100% dinamicamente */
+    background: #387eff; /* Azul minimalista */
+    transition: width 0.3s ease, background 0.3s ease;
+  }
+  
+  /* Se o painel estiver OK ou BAD, a linha acompanha a cor de forma sutil */
+  #stage.ok ~ #scr::after { background: #00b2ff; }
+  #stage.bad ~ #scr::after { background: #ff3b30; }
+  
+  /* Menu de Opções limpo (Estilo Lista de Links) */
+  #payloadMenu { display: none; margin-top: 20px; }
+  #payloadMenu.on { display: block; }
+  
+  #payloadMenu .menuTitle {
+    margin: 0 0 12px 0;
+    color: #4a4f5a;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  #payloadMenu .payloadTile {
+    display: block;
+    margin: 8px 0;
+    padding: 6px 0;
+    border: none;
+    color: #a0a5b0;
+    text-decoration: none;
+    font-size: 12px;
+    transition: color 0.2s ease;
+  }
+  
+  #payloadMenu .payloadTile:hover { color: #ffffff; }
+  #payloadMenu .payloadTile.busy { opacity: .2; pointer-events: none; }
+  
+  /* Indicadores de estado nas opções usando apenas cores no texto */
+  #payloadMenu .payloadTile[data-state="sending"] { color: #387eff; }
+  #payloadMenu .payloadTile[data-state="sent"] { color: #00b2ff; }
+  #payloadMenu .payloadTile[data-state="failed"] { color: #ff3b30; }
+  
+  #payloadMenu .payloadTile img, .legacy, .stage-rail, #reactor, .field, .scan, .beam, .brand-row, #dt {
+    display: none !important;
+  }
+  
+  /* Botões Textuais Simplificados (Sem caixa, apenas texto clicável) */
+  #retryInject {
+    display: none;
+    margin: 16px 0;
+    padding: 4px 0;
+    background: none;
+    border: none;
+    color: #ff3b30;
+    cursor: pointer;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-decoration: underline;
+    text-align: left;
+  }
+  #retryInject.on { display: inline-block; }
+  
+  .drawer-toggle {
+    display: block;
+    margin: 24px 0 0 0;
+    padding: 0;
+    background: none;
+    border: none;
+    color: #4a4f5a;
+    cursor: pointer;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: left;
+    transition: color 0.2s ease;
+  }
+  .drawer-toggle:hover { color: #a0a5b0; }
+  
+  #deepDrawer { display: none; }
+  #deepDrawer.on { display: block; }
+  
+  /* Elementos Secundários Ocultados ou Suavizados */
+  table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 16px; }
+  th, td { border: none; border-bottom: 1px solid #111114; padding: 6px 0; text-align: left; color: #4a4f5a; }
+  th { color: #6a707c; font-weight: 400; }
+  
+  #arm { margin: 20px 0; padding: 0; border: none; }
+  
+  #nav { margin-top: 24px; padding-top: 12px; border-top: 1px solid #16161a; }
+  #nav a { display: inline-block; margin-right: 16px; color: #387eff; text-decoration: none; font-size: 11px; }
+  #nav a:hover { text-decoration: underline; }
+</style>
 </head>
 <body class="quiet">
 <div id="deck">
