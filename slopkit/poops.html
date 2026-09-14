@@ -96,8 +96,8 @@
   </div>
   <div id="payloadMenu">
     <div class="menuTitle">PAYLOADS</div>
-    <a class="payloadTile primary" href="#" data-name="evox.elf" data-key="evox"
-       data-state="default"><span>evox</span><span class="meta">auto</span></a>
+    <a class="payloadTile primary" href="#" data-name="ProsperoMgr.elf" data-key="prosperomgr"
+   data-state="default"><span>ProsperoMgr</span><span class="meta">auto</span></a>
     <a class="payloadTile" href="#" data-name="ftpsrv-ps5.elf" data-key="ftp"
        data-state="default"><span>FTP</span><span class="meta">aux</span></a>
     <a class="payloadTile" href="#" data-name="gdbsrv-ps5.elf" data-key="gdb"
@@ -660,15 +660,15 @@ let evoxAutoStarted = false;
 async function autoInjectevox() {
     if (evoxAutoStarted) return;
     evoxAutoStarted = true;
-    const tile = payloadMenuEl.querySelector('[data-name="evox.elf"]');
+    const tile = payloadMenuEl.querySelector('[data-name="ProsperoMgr.elf"]');
     const retry = document.getElementById("retryInject");
     setReactorState("inject");
     setStageChip("evox", "on");
     stage("INJECTING evox (waiting for :9021)", "");
     flushMark("evox-AUTO-START", "name=evox.elf-connectAttempts="
         + PAYLOAD_CONNECT_ATTEMPTS);
-    const ok = await sendPayloadInPlace("evox.elf",
-        tile || payloadMenuEl.getElementsByTagName("a")[0]);
+    const ok = await sendPayloadInPlace("ProsperoMgr.elf",
+    tile || payloadMenuEl.getElementsByTagName("a")[0]);
     if (ok) {
         setReactorState("online");
         setStageChip("evox", "done");
