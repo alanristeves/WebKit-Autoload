@@ -30,236 +30,252 @@
 </script>
 <title>WebKit Autoloader</title>
 <style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    /* Fundo preto puro com um brilho central cinza-azulado fosco (estilo terminal Kali) */
-    background: radial-gradient(circle at center, #11141a 0%, #050608 100%);
-    color: #a5b0c2;
-    /* Fontes monoespaçadas de alta tecnologia, perfeitas para telas de hacking */
-    font: 13px/1.5 "JetBrains Mono", "Fira Code", "Courier New", monospace;
-    letter-spacing: 0.5px;
-    -webkit-font-smoothing: antialiased;
-  }
-  
-  #deck {
-    max-width: 720px;
-    margin: 20px auto;
-    padding: 0 16px;
-  }
-  
-  /* O "Palco" agora parece um terminal de comando suspenso */
-  #stage {
-    margin: 12px 0;
-    padding: 14px;
-    background: rgba(15, 19, 26, 0.75);
-    /* Borda sutil na cor cinza-chumbo do Kali */
-    border: 1px solid #2a313d;
-    border-radius: 4px;
-    color: #e1e7f0;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    transition: all 0.25s ease;
-  }
-  
-  /* Modo OK: O famoso Azul-Dragão brilhante do Kali Linux */
-  #stage.ok {
-    border-color: #387eff;
-    color: #5ce1e6;
-    text-shadow: 0 0 8px rgba(92, 225, 230, 0.4);
-    box-shadow: inset 0 0 10px rgba(56, 126, 255, 0.15), 0 0 15px rgba(56, 126, 255, 0.2);
-  }
-  
-  /* Modo BAD: Vermelho de alerta de intrusão / falha crítica */
-  #stage.bad {
-    border-color: #ff3b30;
-    color: #ff6b6b;
-    text-shadow: 0 0 8px rgba(255, 107, 107, 0.4);
-    box-shadow: inset 0 0 10px rgba(255, 59, 48, 0.15), 0 0 15px rgba(255, 59, 48, 0.2);
-  }
-  
-  #liveStrip, #vitals, #cfg, #reboot, #verdict, #danger, #badge, #failureMessage {
-    margin: 8px 0;
-    color: #727e91;
-  }
-  
-  #failureMessage {
-    display: none;
-    color: #ff4f4f;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
-  
-  #failureMessage.on {
-    display: block;
-  }
-  
-  #badge {
-    display: none;
-  }
-  
-  #badge.on {
-    display: block;
-    color: #5ce1e6;
-  }
-  
-  /* Bloco de tela de log ou código antigo */
-  #scr, #early {
-    white-space: pre-wrap;
-    word-break: break-word;
-    font-size: 11px;
-    color: #6272a4; /* Tom clássico de comentários de código */
-    max-height: 40vh;
-    overflow: auto;
-    background: #090b0e;
-    padding: 12px;
-    border: 1px solid #1a1f26;
-    border-radius: 2px;
-  }
-  
-  #payloadMenu {
-    display: none;
-    margin-top: 16px;
-  }
-  
-  #payloadMenu.on {
-    display: block;
-  }
-  
-  #payloadMenu .menuTitle {
-    margin: 0 0 12px;
-    color: #e1e7f0;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  
-  /* Linhas de payloads parecendo comandos executáveis de uma lista */
-  #payloadMenu .payloadTile {
-    display: block;
-    margin: 6px 0;
-    padding: 12px;
-    background: #0d1117;
-    border: 1px solid #21262d;
-    border-radius: 4px;
-    color: #c9d1d9;
-    text-decoration: none;
-    transition: all 0.2s ease;
-  }
-  
-  /* Efeito de seleção de linha do terminal (Hover) */
-  #payloadMenu .payloadTile:hover {
-    background: #161b22;
-    border-color: #387eff;
-    color: #ffffff;
-  }
-  
-  #payloadMenu .payloadTile.busy {
-    opacity: .3;
-    pointer-events: none;
-  }
-  
-  /* Estados de Injeção de Scripts (Payloads) */
-  #payloadMenu .payloadTile[data-state="sending"] {
-    border-color: #387eff;
-    background: rgba(56, 126, 255, 0.05);
-  }
-  
-  #payloadMenu .payloadTile[data-state="sent"] {
-    border-color: #5ce1e6;
-    color: #5ce1e6;
-  }
-  
-  #payloadMenu .payloadTile[data-state="failed"] {
-    border-color: #ff3b30;
-    color: #ff6b6b;
-  }
-  
-  #payloadMenu .payloadTile img, .legacy, .stage-rail, #reactor, .field, .scan, .beam, .brand-row, #dt {
-    display: none !important;
-  }
-  
-  /* Botão de re-injeção perigoso */
-  #retryInject {
-    display: none;
-    margin: 12px 0;
-    padding: 10px 16px;
-    background: rgba(255, 59, 48, 0.1);
-    color: #ff6b6b;
-    border: 1px solid #ff3b30;
-    border-radius: 4px;
-    cursor: pointer;
-    text-transform: uppercase;
-    font-size: 12px;
-  }
-  
-  #retryInject.on {
-    display: inline-block;
-  }
-  
-  /* Botões de alternância secos e industriais */
-  .drawer-toggle {
-    margin: 8px 0;
-    padding: 6px 12px;
-    background: #161b22;
-    color: #a5b0c2;
-    border: 1px solid #30363d;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 12px;
-  }
-  
-  .drawer-toggle:hover {
-    background: #21262d;
-    color: #ffffff;
-  }
-  
-  #deepDrawer {
-    display: none;
-  }
-  
-  #deepDrawer.on {
-    display: block;
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-  }
-  
-  th, td {
-    border-bottom: 1px solid #161b22;
-    padding: 6px 8px;
-    text-align: left;
-  }
-  
-  th {
-    color: #5ce1e6; /* Cabeçalhos em azul tecnológico */
-    text-transform: uppercase;
-    font-size: 11px;
-  }
-  
-  #arm {
-    margin: 16px 0;
-    padding: 12px;
-    background: #090b0e;
-    border: 1px solid #21262d;
-    border-radius: 4px;
-  }
-  
-  /* Links que parecem conexões ssh ativas */
-  #nav a {
-    display: inline-block;
-    margin: 6px 16px 6px 0;
-    color: #387eff;
-    text-decoration: none;
-  }
-  
-  #nav a:hover {
-    color: #5ce1e6;
-    text-decoration: underline;
-  }
-</style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at center, #11141a 0%, #050608 100%);
+      color: #a5b0c2;
+      font: 13px/1.5 "JetBrains Mono", "Fira Code", "Courier New", monospace;
+      letter-spacing: 0.5px;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    #deck {
+      max-width: 720px;
+      margin: 20px auto;
+      padding: 0 16px;
+    }
+    
+    #stage {
+      margin: 12px 0;
+      padding: 16px;
+      background: rgba(15, 19, 26, 0.75);
+      border: 1px solid #2a313d;
+      border-radius: 4px;
+      color: #e1e7f0;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      transition: all 0.25s ease;
+    }
+    
+    /* Modo OK: Azul-Dragão brilhante do Kali Linux */
+    #stage.ok {
+      border-color: #387eff;
+      color: #5ce1e6;
+      text-shadow: 0 0 8px rgba(92, 225, 230, 0.4);
+      box-shadow: inset 0 0 10px rgba(56, 126, 255, 0.15), 0 0 15px rgba(56, 126, 255, 0.2);
+    }
+    
+    /* Modo BAD: Alerta Vermelho de Falha */
+    #stage.bad {
+      border-color: #ff3b30;
+      color: #ff6b6b;
+      text-shadow: 0 0 8px rgba(255, 107, 107, 0.4);
+      box-shadow: inset 0 0 10px rgba(255, 59, 48, 0.15), 0 0 15px rgba(255, 59, 48, 0.2);
+    }
+    
+    #liveStrip, #vitals, #cfg, #reboot, #verdict, #danger, #badge, #failureMessage {
+      margin: 6px 0;
+      color: #727e91;
+    }
+    
+    #failureMessage {
+      display: none;
+      color: #ff4f4f;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    
+    #failureMessage.on {
+      display: block;
+    }
+    
+    #badge {
+      display: none;
+    }
+    
+    #badge.on {
+      display: block;
+      color: #5ce1e6;
+      font-weight: bold;
+    }
+    
+    /* Container da Barra de Progresso */
+    #scr, #early {
+      display: block;
+      background: #090b0e;
+      border: 1px solid #1a1f26;
+      border-radius: 4px;
+      padding: 16px;
+      margin: 12px 0;
+    }
+
+    .progress-rail {
+      width: 100%;
+      height: 12px;
+      background: #11141a;
+      border: 1px solid #2a313d;
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #387eff, #5ce1e6);
+      box-shadow: 0 0 10px rgba(92, 225, 230, 0.7);
+      transition: width 0.1s linear;
+    }
+
+    .progress-status {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 11px;
+      color: #5ce1e6;
+      text-transform: uppercase;
+    }
+    
+    #payloadMenu {
+      display: none;
+      margin-top: 16px;
+    }
+    
+    #payloadMenu.on {
+      display: block;
+    }
+    
+    #payloadMenu .menuTitle {
+      margin: 0 0 12px;
+      color: #e1e7f0;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    #payloadMenu .payloadTile {
+      display: block;
+      margin: 6px 0;
+      padding: 12px;
+      background: #0d1117;
+      border: 1px solid #21262d;
+      border-radius: 4px;
+      color: #c9d1d9;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    #payloadMenu .payloadTile:hover {
+      background: #161b22;
+      border-color: #387eff;
+      color: #ffffff;
+    }
+    
+    #payloadMenu .payloadTile.busy {
+      opacity: .3;
+      pointer-events: none;
+    }
+    
+    #payloadMenu .payloadTile[data-state="sending"] {
+      border-color: #387eff;
+      background: rgba(56, 126, 255, 0.05);
+    }
+    
+    #payloadMenu .payloadTile[data-state="sent"] {
+      border-color: #5ce1e6;
+      color: #5ce1e6;
+    }
+    
+    #payloadMenu .payloadTile[data-state="failed"] {
+      border-color: #ff3b30;
+      color: #ff6b6b;
+    }
+    
+    #retryInject {
+      display: none;
+      margin: 12px 0;
+      padding: 10px 16px;
+      background: rgba(255, 59, 48, 0.1);
+      color: #ff6b6b;
+      border: 1px solid #ff3b30;
+      border-radius: 4px;
+      cursor: pointer;
+      text-transform: uppercase;
+      font-size: 11px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    
+    #retryInject.on {
+      display: inline-block;
+    }
+    
+    .drawer-toggle {
+      margin: 8px 0;
+      padding: 8px 14px;
+      background: #161b22;
+      color: #a5b0c2;
+      border: 1px solid #30363d;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      width: 100%;
+    }
+    
+    .drawer-toggle:hover {
+      background: #21262d;
+      color: #ffffff;
+    }
+    
+    #deepDrawer {
+      display: none;
+      margin-top: 12px;
+    }
+    
+    #deepDrawer.on {
+      display: block;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    
+    th, td {
+      border-bottom: 1px solid #161b22;
+      padding: 8px 6px;
+      text-align: left;
+    }
+    
+    th {
+      color: #5ce1e6;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+    
+    #arm {
+      margin: 16px 0;
+      padding: 12px;
+      background: #090b0e;
+      border: 1px solid #21262d;
+      border-radius: 4px;
+    }
+    
+    #nav a {
+      display: inline-block;
+      margin: 6px 16px 6px 0;
+      color: #387eff;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    
+    #nav a:hover {
+      color: #5ce1e6;
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body class="quiet">
 <div id="deck">
