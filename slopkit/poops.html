@@ -681,12 +681,12 @@ prosperoMgrAutoStarted = true;
         setStageChip("prosperomgr", "done");
         stageEl.textContent = "PAYLOAD MANAGER ONLINE";
         stageEl.className = "ok";
-        syncStageChips("evox online", "ok");
+        syncStageChips("WebKit Autoload", "ok");
         flushMark("ProsperoMgr-AUTO-OK", "name=ProsperoMgr.elf");
         if (retry) retry.className = "";
     } else if (payloadSenderBlocked) {
         setReactorState("bad");
-        setStageChip("evox", "fail");
+        setStageChip("WebKit Autoload", "fail");
         stageEl.textContent = "Jailbreack BLOCKED — REBOOT REQUIRED";
         stageEl.className = "bad";
         if (retry) {
@@ -697,7 +697,7 @@ prosperoMgrAutoStarted = true;
         flushMark("ProsperoMgr-AUTO-BLOCKED", clean(payloadSenderBlocked));
     } else {
         setReactorState("inject-fail");
-        setStageChip("evox", "fail");
+        setStageChip("WebKit Autoload", "fail");
         stageEl.textContent = "Payload INJECT FAILED — RETRY OR REBOOT";
         stageEl.className = "bad";
         if (retry) {
@@ -714,7 +714,7 @@ prosperoMgrAutoStarted = true;
     if (retry) {
         retry.onclick = function () {
             if (payloadSenderBlocked) {
-                stageEl.textContent = "evox BLOCKED — REBOOT REQUIRED";
+                stageEl.textContent = "WebKit Autoload BLOCKED — REBOOT REQUIRED";
                 stageEl.className = "bad";
                 flushMark("ProsperoMgr-RETRY-DENIED", clean(payloadSenderBlocked));
                 return;
@@ -723,7 +723,7 @@ prosperoMgrAutoStarted = true;
                 flushMark("Payload-RETRY-BUSY", "sender-still-busy");
                 return;
             }
-            evoxAutoStarted = false;
+            prosperoMgrAutoStarted = false;
             retry.className = "";
             autoInjectProsperoMgr();
         };
