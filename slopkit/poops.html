@@ -664,8 +664,8 @@ async function autoInjectevox() {
     const retry = document.getElementById("retryInject");
     setReactorState("inject");
     setStageChip("evox", "on");
-    stage("INJECTING evox (waiting for :9021)", "");
-    flushMark("evox-AUTO-START", "name=evox.elf-connectAttempts="
+    stage("INJECTING ProsperoMgr (waiting for :9021)", "");
+    flushMark("ProsperoMgr-AUTO-START", "name=ProsperoMgr.elf-connectAttempts="
         + PAYLOAD_CONNECT_ATTEMPTS);
     const ok = await sendPayloadInPlace("ProsperoMgr.elf",
     tile || payloadMenuEl.getElementsByTagName("a")[0]);
@@ -675,7 +675,7 @@ async function autoInjectevox() {
         stageEl.textContent = "PAYLOAD MANAGER ONLINE";
         stageEl.className = "ok";
         syncStageChips("evox online", "ok");
-        flushMark("evox-AUTO-OK", "name=evox.elf");
+        flushMark("ProsperoMgr-AUTO-OK", "name=ProsperoMgr.elf");
         if (retry) retry.className = "";
     } else if (payloadSenderBlocked) {
         setReactorState("bad");
