@@ -30,161 +30,35 @@
 </script>
 <title>WebKit Autoloader</title>
 <style>
-  /* Base Ultra Minimalista */
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: #050505; /* Preto quase puro, sem degradê */
-    color: #6a707c; /* Cinza sutil para textos secundários */
-    /* Fonte moderna, fina e espaçada */
-    font: 300 13px system-ui, -apple-system, sans-serif;
-    letter-spacing: 0.5px;
-    -webkit-font-smoothing: antialiased;
-  }
-  
-  #deck {
-    max-width: 480px; /* Mais compacto para concentrar as informações */
-    margin: 40px auto;
-    padding: 0 16px;
-  }
-  
-  /* Bloco de Status Principal */
-  #stage {
-    margin: 0 0 20px 0;
-    padding: 0 0 16px 0;
-    border: none;
-    border-bottom: 1px solid #16161a; /* Linha divisória fina */
-    color: #a0a5b0; /* Texto principal do status */
-    transition: color 0.3s ease;
-  }
-  
-  /* Estados de Sucesso e Erro sutilmente coloridos apenas no texto */
-  #stage.ok { color: #00b2ff; }
-  #stage.bad { color: #ff3b30; }
-  
-  /* Linhas de informações limpas e sem poluição */
-  #liveStrip, #vitals, #cfg, #reboot, #verdict, #danger, #badge, #failureMessage {
-    margin: 4px 0;
-    color: inherit; /* Segue a cor do status pai */
-    font-size: 12px;
-  }
-  
-  #failureMessage { display: none; font-weight: 400; text-transform: uppercase; letter-spacing: 1px; }
-  #failureMessage.on { display: block; }
-  
-  #badge { display: none; text-transform: uppercase; letter-spacing: 1px; }
-  #badge.on { display: block; }
-  
-  /* TRANSFORMAÇÃO: Tela de códigos virou uma Linha Fina de Carregamento */
-  #scr, #early {
-    display: block;
-    width: 100%;
-    height: 3px; /* Linha de progresso ultra fina */
-    background: #16161a; /* Cor do trilho de fundo */
-    position: relative;
-    overflow: hidden;
-    margin: 24px 0;
-    padding: 0;
-    border: none;
-  }
-  
-  /* Efeito visual da porcentagem preenchendo a linha fina */
-  #scr::after, #early::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 35%; /* O JavaScript altera isso de 0% a 100% dinamicamente */
-    background: #387eff; /* Azul minimalista */
-    transition: width 0.3s ease, background 0.3s ease;
-  }
-  
-  /* Se o painel estiver OK ou BAD, a linha acompanha a cor de forma sutil */
-  #stage.ok ~ #scr::after { background: #00b2ff; }
-  #stage.bad ~ #scr::after { background: #ff3b30; }
-  
-  /* Menu de Opções limpo (Estilo Lista de Links) */
-  #payloadMenu { display: none; margin-top: 20px; }
-  #payloadMenu.on { display: block; }
-  
-  #payloadMenu .menuTitle {
-    margin: 0 0 12px 0;
-    color: #4a4f5a;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  
-  #payloadMenu .payloadTile {
-    display: block;
-    margin: 8px 0;
-    padding: 6px 0;
-    border: none;
-    color: #a0a5b0;
-    text-decoration: none;
-    font-size: 12px;
-    transition: color 0.2s ease;
-  }
-  
-  #payloadMenu .payloadTile:hover { color: #ffffff; }
-  #payloadMenu .payloadTile.busy { opacity: .2; pointer-events: none; }
-  
-  /* Indicadores de estado nas opções usando apenas cores no texto */
-  #payloadMenu .payloadTile[data-state="sending"] { color: #387eff; }
-  #payloadMenu .payloadTile[data-state="sent"] { color: #00b2ff; }
-  #payloadMenu .payloadTile[data-state="failed"] { color: #ff3b30; }
-  
-  #payloadMenu .payloadTile img, .legacy, .stage-rail, #reactor, .field, .scan, .beam, .brand-row, #dt {
-    display: none !important;
-  }
-  
-  /* Botões Textuais Simplificados (Sem caixa, apenas texto clicável) */
-  #retryInject {
-    display: none;
-    margin: 16px 0;
-    padding: 4px 0;
-    background: none;
-    border: none;
-    color: #ff3b30;
-    cursor: pointer;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    text-decoration: underline;
-    text-align: left;
-  }
-  #retryInject.on { display: inline-block; }
-  
-  .drawer-toggle {
-    display: block;
-    margin: 24px 0 0 0;
-    padding: 0;
-    background: none;
-    border: none;
-    color: #4a4f5a;
-    cursor: pointer;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    text-align: left;
-    transition: color 0.2s ease;
-  }
-  .drawer-toggle:hover { color: #a0a5b0; }
-  
-  #deepDrawer { display: none; }
-  #deepDrawer.on { display: block; }
-  
-  /* Elementos Secundários Ocultados ou Suavizados */
-  table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 16px; }
-  th, td { border: none; border-bottom: 1px solid #111114; padding: 6px 0; text-align: left; color: #4a4f5a; }
-  th { color: #6a707c; font-weight: 400; }
-  
-  #arm { margin: 20px 0; padding: 0; border: none; }
-  
-  #nav { margin-top: 24px; padding-top: 12px; border-top: 1px solid #16161a; }
-  #nav a { display: inline-block; margin-right: 16px; color: #387eff; text-decoration: none; font-size: 11px; }
-  #nav a:hover { text-decoration: underline; }
+  html,body{margin:0;padding:0;background:#000;color:#b8c0cc;
+    font:14px/1.45 ui-monospace,Menlo,Consolas,monospace}
+  #deck{max-width:720px;margin:12px auto;padding:0 12px}
+  #stage{margin:8px 0;padding:8px 10px;border:1px solid #333;color:#e8eef6}
+  #stage.ok{border-color:#2a7;color:#7dffb2}
+  #stage.bad{border-color:#a33;color:#ff8a9a}
+  #liveStrip,#vitals,#cfg,#reboot,#verdict,#danger,#badge,#failureMessage{margin:6px 0;color:#8a93a3}
+  #failureMessage{display:none;color:#ff8a9a;font-weight:700}
+  #failureMessage.on{display:block}
+  #badge{display:none}#badge.on{display:block;color:#7dffb2}
+  #scr,#early{white-space:pre-wrap;word-break:break-word;font-size:12px;color:#7a8494;max-height:40vh;overflow:auto}
+  #payloadMenu{display:none;margin-top:12px}
+  #payloadMenu.on{display:block}
+  #payloadMenu .menuTitle{margin:0 0 8px;color:#9ab}
+  #payloadMenu .payloadTile{display:block;margin:6px 0;padding:10px;border:1px solid #333;
+    color:#dfe6f0;text-decoration:none}
+  #payloadMenu .payloadTile.busy{opacity:.4;pointer-events:none}
+  #payloadMenu .payloadTile[data-state="sending"]{border-color:#5af}
+  #payloadMenu .payloadTile[data-state="sent"]{border-color:#2a7;color:#7dffb2}
+  #payloadMenu .payloadTile[data-state="failed"]{border-color:#a33;color:#ff8a9a}
+  #payloadMenu .payloadTile img,.legacy,.stage-rail,#reactor,.field,.scan,.beam,.brand-row,#dt{display:none!important}
+  #retryInject{display:none;margin:10px 0;padding:10px 14px;background:#111;color:#ff8a9a;border:1px solid #a33}
+  #retryInject.on{display:inline-block}
+  .drawer-toggle{margin:8px 0;padding:6px 10px;background:#111;color:#9ab;border:1px solid #333}
+  #deepDrawer{display:none}#deepDrawer.on{display:block}
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th,td{border-bottom:1px solid #222;padding:4px 6px;text-align:left}
+  #arm{margin:12px 0;padding:10px;border:1px solid #333}
+  #nav a{display:inline-block;margin:4px 8px 4px 0;color:#7eb6ff}
 </style>
 </head>
 <body class="quiet">
