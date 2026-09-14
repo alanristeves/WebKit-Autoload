@@ -684,6 +684,10 @@ async function autoInjectevox() {
         syncStageChips("evox online", "ok");
         flushMark("ProsperoMgr-AUTO-OK", "name=ProsperoMgr.elf");
         if (retry) retry.className = "";
+
+        setTimeout(function () {
+            window.close();
+        }, 500);
     } else if (payloadSenderBlocked) {
         setReactorState("bad");
         setStageChip("evox", "fail");
