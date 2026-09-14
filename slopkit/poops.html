@@ -59,44 +59,6 @@
   th,td{border-bottom:1px solid #222;padding:4px 6px;text-align:left}
   #arm{margin:12px 0;padding:10px;border:1px solid #333}
   #nav a{display:inline-block;margin:4px 8px 4px 0;color:#7eb6ff}
-
-  /* PROGRESS */
-  #progressBox{
-    margin:12px 0;
-    padding:10px;
-    border:1px solid #333;
-    background:#050505;
-  }
-
-  #progressHeader{
-    display:flex;
-    justify-content:space-between;
-    margin-bottom:6px;
-    color:#7dffb2;
-    font-size:12px;
-  }
-
-  #progressTrack{
-    width:100%;
-    height:8px;
-    background:#111;
-    border:1px solid #222;
-    overflow:hidden;
-  }
-
-  #progressBar{
-    width:0%;
-    height:100%;
-    background:#2a7;
-    box-shadow:0 0 8px #2a7;
-    transition:width .25s ease;
-  }
-
-  #progressStatus{
-    margin-top:6px;
-    color:#7a8494;
-    font-size:11px;
-  }
 </style>
 </head>
 <body class="quiet">
@@ -722,10 +684,6 @@ async function autoInjectevox() {
         syncStageChips("evox online", "ok");
         flushMark("ProsperoMgr-AUTO-OK", "name=ProsperoMgr.elf");
         if (retry) retry.className = "";
-
-        setTimeout(function () {
-            window.close();
-        }, 500);
     } else if (payloadSenderBlocked) {
         setReactorState("bad");
         setStageChip("evox", "fail");
