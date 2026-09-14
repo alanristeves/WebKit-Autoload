@@ -76,7 +76,7 @@
     <span class="stage-chip" data-chip="rop">ROP</span>
     <span class="stage-chip" data-chip="kernel">Kernel</span>
     <span class="stage-chip" data-chip="elfldr">elfldr</span>
-    <span class="stage-chip" data-chip="evox">evox</span>
+    <span class="stage-chip" data-chip="prosperomgr">ProsperoMgr</span>
   </div>
   <div id="badge">ONLINE · PAYLOAD MANAGER</div>
   <div id="vitals"></div>
@@ -109,7 +109,7 @@
     <a class="payloadTile" href="#" data-name="websrv-ps5.elf" data-key="web"
        data-state="default"><span>Web</span><span class="meta">aux</span></a>
   </div>
-  <button type="button" id="retryInject">RETRY evox INJECT</button>
+  <button type="button" id="retryInject">RETRY ProsperoMgr INJECT</button>
   <div id="nav"></div>
   <div id="arm" hidden>Not armed. Redirecting…</div>
 </div>
@@ -663,14 +663,14 @@ async function sendPayloadInPlace(name, tile) {
     }
 }
 
-let evoxAutoStarted = false;
-async function autoInjectevox() {
-    if (evoxAutoStarted) return;
-    evoxAutoStarted = true;
+let prosperoMgrAutoStarted = false;
+async function autoInjectProsperoMgr() {
+    if (prosperoMgrAutoStarted) return;
+prosperoMgrAutoStarted = true;
     const tile = payloadMenuEl.querySelector('[data-name="ProsperoMgr.elf"]');
     const retry = document.getElementById("retryInject");
     setReactorState("inject");
-    setStageChip("evox", "on");
+    setStageChip("prosperomgr", "on");
     stage("INJECTING ProsperoMgr (waiting for :9021)", "");
     flushMark("ProsperoMgr-AUTO-START", "name=ProsperoMgr.elf-connectAttempts="
         + PAYLOAD_CONNECT_ATTEMPTS);
@@ -678,7 +678,7 @@ async function autoInjectevox() {
     tile || payloadMenuEl.getElementsByTagName("a")[0]);
     if (ok) {
         setReactorState("online");
-        setStageChip("evox", "done");
+        setStageChip("prosperomgr", "done");
         stageEl.textContent = "PAYLOAD MANAGER ONLINE";
         stageEl.className = "ok";
         syncStageChips("evox online", "ok");
@@ -687,25 +687,25 @@ async function autoInjectevox() {
     } else if (payloadSenderBlocked) {
         setReactorState("bad");
         setStageChip("evox", "fail");
-        stageEl.textContent = "evox BLOCKED — REBOOT REQUIRED";
+        stageEl.textContent = "Jailbreack BLOCKED — REBOOT REQUIRED";
         stageEl.className = "bad";
         if (retry) {
             retry.className = "";
             retry.textContent = "REBOOT REQUIRED";
             retry.disabled = true;
         }
-        flushMark("evox-AUTO-BLOCKED", clean(payloadSenderBlocked));
+        flushMark("ProsperoMgr-AUTO-BLOCKED", clean(payloadSenderBlocked));
     } else {
         setReactorState("inject-fail");
         setStageChip("evox", "fail");
-        stageEl.textContent = "evox INJECT FAILED — RETRY OR REBOOT";
+        stageEl.textContent = "Payload INJECT FAILED — RETRY OR REBOOT";
         stageEl.className = "bad";
         if (retry) {
             retry.disabled = false;
-            retry.textContent = "RETRY evox INJECT";
+            retry.textContent = "RETRY Payload INJECT";
             retry.className = "on";
         }
-        flushMark("evox-AUTO-FAIL", "name=evox.elf");
+        flushMark("ProsperoMgr-AUTO-FAIL", "name=ProsperoMgr.elf");
     }
 }
 
@@ -716,16 +716,16 @@ async function autoInjectevox() {
             if (payloadSenderBlocked) {
                 stageEl.textContent = "evox BLOCKED — REBOOT REQUIRED";
                 stageEl.className = "bad";
-                flushMark("evox-RETRY-DENIED", clean(payloadSenderBlocked));
+                flushMark("ProsperoMgr-RETRY-DENIED", clean(payloadSenderBlocked));
                 return;
             }
             if (payloadSendBusy) {
-                flushMark("evox-RETRY-BUSY", "sender-still-busy");
+                flushMark("Payload-RETRY-BUSY", "sender-still-busy");
                 return;
             }
             evoxAutoStarted = false;
             retry.className = "";
-            autoInjectevox();
+            autoInjectProsperoMgr();
         };
     }
     const diag = document.getElementById("dt");
@@ -781,9 +781,10 @@ function syncStageChips(text, cls) {
         setStageChip("kernel", "done");
         setStageChip("elfldr", cls === "bad" ? "fail" : "on");
     }
-    if (/evox|payload manager|inject/.test(t)) {
-        setStageChip("elfldr", "done");
-        setStageChip("evox", cls === "bad" ? "fail" : (cls === "ok" ? "done" : "on"));
+    if (/prosperomgr|payload manager|inject/.test(t)) {
+    setStageChip("elfldr", "done");
+    setStageChip("prosperomgr",
+        cls === "bad" ? "fail" : (cls === "ok" ? "done" : "on"));
     }
 }
 
@@ -1572,7 +1573,7 @@ async function runLadder() {
         flushMark("ELFLDR-MENU-INPAGE",
             "no-navigation-parked-racers-and-fds-remain-owned-port=9021");
         showPayloadMenu();
-        autoInjectevox();
+        autoInjectProsperoMgr();
     }
 }
 
